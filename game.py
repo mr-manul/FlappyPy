@@ -20,6 +20,7 @@ class Game:
         self.bird = Bird()
         self.pipes = []
         self.score = 0
+        self.high_score = 0  # Initialize high score to 0
         self.running = True
 
     def create_pipe(self):
@@ -58,7 +59,10 @@ class Game:
             # Check collisions
             for pipe in self.pipes:
                 if pipe.collide(self.bird):
-                    print(f"Game Over! Your Score: {self.score}")
+                    # Update high score if the current score is greater
+                    if self.score > self.high_score:
+                        self.high_score = self.score
+                    print(f"Game Over! Your Score: {self.score}, High Score: {self.high_score}")
                     self.running = False
 
             # Draw the bird and pipes
@@ -66,10 +70,12 @@ class Game:
             for pipe in self.pipes:
                 pipe.draw(self.screen)
 
-            # Draw the score
+            # Draw the score and high score
             font = pygame.font.SysFont("Arial", 36)
             score_text = font.render(f"Score: {self.score}", True, BLACK)
-            self.screen.blit(score_text, (10, 10))
+            high_score_text = font.render(f"High Score: {self.high_score}", True, BLACK)
+            self.screen.blit(score_text, (10, 10))  # Score in top-left corner
+            self.screen.blit(high_score_text, (SCREEN_WIDTH - 200, 10))  # High score in top-right corner
 
             # Update the display
             pygame.display.flip()
