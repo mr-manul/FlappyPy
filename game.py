@@ -9,6 +9,9 @@ SCREEN_HEIGHT = 600
 FPS = 60
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BUTTON_COLOR = (0, 200, 0)
+BUTTON_HOVER_COLOR = (0, 255, 0)
+BUTTON_TEXT_COLOR = WHITE
 
 
 class Game:
@@ -28,8 +31,52 @@ class Game:
         new_pipe = Pipe(SCREEN_WIDTH, gap_height)
         self.pipes.append(new_pipe)
 
+    def show_start_screen(self):
+        """Display the start screen with a button."""
+        font = pygame.font.SysFont("Arial", 48)
+        button_font = pygame.font.SysFont("Arial", 36)
+
+        # Button properties
+        button_width = 200
+        button_height = 60
+        button_x = (SCREEN_WIDTH - button_width) // 2
+        button_y = (SCREEN_HEIGHT - button_height) // 2
+
+        start_screen = True
+        while start_screen:
+            self.screen.fill(WHITE)  # Clear screen with white background
+
+            # Title text
+            title_text = font.render("Flappy Bird", True, BLACK)
+            title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
+            self.screen.blit(title_text, title_rect)
+
+            # Button
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            is_hovered = button_x < mouse_x < button_x + button_width and button_y < mouse_y < button_y + button_height
+            button_color = BUTTON_HOVER_COLOR if is_hovered else BUTTON_COLOR
+            pygame.draw.rect(self.screen, button_color, (button_x, button_y, button_width, button_height))
+
+            # Button text
+            button_text = button_font.render("Start Game", True, BUTTON_TEXT_COLOR)
+            button_text_rect = button_text.get_rect(center=(button_x + button_width // 2, button_y + button_height // 2))
+            self.screen.blit(button_text, button_text_rect)
+
+            # Event handling
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN and is_hovered:
+                    start_screen = False
+
+            pygame.display.flip()
+            self.clock.tick(FPS)
+
     def run(self):
         """Main game loop."""
+        self.show_start_screen()  # Show the starting screen before the game starts
+
         while self.running:
             self.screen.fill(WHITE)  # Clear the screen with a white background
 
