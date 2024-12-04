@@ -15,7 +15,7 @@ BUTTON_TEXT_COLOR = WHITE
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, high_score=0):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("FlappyPy")
@@ -23,7 +23,7 @@ class Game:
         self.bird = Bird()
         self.pipes = []
         self.score = 0
-        self.high_score = 0  # Initialize high score to 0
+        self.high_score = high_score
         self.running = False
 
     def create_pipe(self):
@@ -95,6 +95,16 @@ class Game:
             game_over_rect = game_over_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
             self.screen.blit(game_over_text, game_over_rect)
 
+            # Display the final score and high score
+            score_text = font.render(f"Score: {self.score}", True, BLACK)
+            high_score_text = font.render(f"High Score: {self.high_score}", True, BLACK)
+
+            # Display the score at the bottom center of the screen
+            score_text_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 120))
+            high_score_text_rect = high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 80))
+            self.screen.blit(score_text, score_text_rect)
+            self.screen.blit(high_score_text, high_score_text_rect)
+
             # Retry button
             mouse_x, mouse_y = pygame.mouse.get_pos()
             retry_hovered = retry_button_x < mouse_x < retry_button_x + button_width and \
@@ -137,8 +147,12 @@ class Game:
         while True:  # Keep the game loop running indefinitely until explicitly quit
             if not self.running:
                 self.show_start_screen()  # Show the starting screen
-                self.__init__()  # Reset the game state after the start screen
-                self.running = True  # Ensure the game loop runs
+
+                # Reset game state after the start screen
+                self.bird = Bird()  # Reinitialize the bird
+                self.pipes = []  # Clear existing pipes
+                self.score = 0  # Reset the score
+                self.running = True  # Set the game to running state
 
             # Main game loop
             while self.running:
@@ -170,10 +184,10 @@ class Game:
                 # Check collisions
                 for pipe in self.pipes:
                     if pipe.collide(self.bird):
-                        print(f"Game Over! Your Score: {self.score}")
-                        self.show_game_over_screen()  # Show the game-over screen
-                        self.score > self.high_score
-                        self.high_score = self.score
+                        # Update high score if current score is greater
+                        if self.score > self.high_score:
+                            self.high_score = self.score
+                        self.running = False  # End the game loop
                         break
 
                 # Draw the bird and pipes
@@ -181,17 +195,14 @@ class Game:
                 for pipe in self.pipes:
                     pipe.draw(self.screen)
 
-            # Draw the score and high score
-            font = pygame.font.SysFont("Arial", 36)
-            score_text = font.render(f"Score: {self.score}", True, BLACK)
-            high_score_text = font.render(f"High Score: {self.high_score}", True, BLACK)
-            self.screen.blit(score_text, (10, 10))  # Score in top-left corner
-            self.screen.blit(high_score_text, (SCREEN_WIDTH - 200, 10))  # High score in top-right corner
+                # Draw the score
+                font = pygame.font.SysFont("Arial", 36)
+                score_text = font.render(f"Score: {self.score}", True, BLACK)
+                self.screen.blit(score_text, (10, 10))  # Score in top-left corner
 
-            # Update the display
-            pygame.display.flip()
-            self.clock.tick(FPS)
+                # Update the display
+                pygame.display.flip()
+                self.clock.tick(FPS)
 
-
-
-
+            # Show game over screen after the main game loop ends
+            self.show_game_over_screen()
