@@ -18,11 +18,12 @@ class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("Flappy Bird")
+        pygame.display.set_caption("FlappyPy")
         self.clock = pygame.time.Clock()
         self.bird = Bird()
         self.pipes = []
         self.score = 0
+        self.high_score = 0  # Initialize high score to 0
         self.running = False
 
     def create_pipe(self):
@@ -171,6 +172,8 @@ class Game:
                     if pipe.collide(self.bird):
                         print(f"Game Over! Your Score: {self.score}")
                         self.show_game_over_screen()  # Show the game-over screen
+                        self.score > self.high_score
+                        self.high_score = self.score
                         break
 
                 # Draw the bird and pipes
@@ -178,14 +181,16 @@ class Game:
                 for pipe in self.pipes:
                     pipe.draw(self.screen)
 
-                # Draw the score
-                font = pygame.font.SysFont("Arial", 36)
-                score_text = font.render(f"Score: {self.score}", True, BLACK)
-                self.screen.blit(score_text, (10, 10))
+            # Draw the score and high score
+            font = pygame.font.SysFont("Arial", 36)
+            score_text = font.render(f"Score: {self.score}", True, BLACK)
+            high_score_text = font.render(f"High Score: {self.high_score}", True, BLACK)
+            self.screen.blit(score_text, (10, 10))  # Score in top-left corner
+            self.screen.blit(high_score_text, (SCREEN_WIDTH - 200, 10))  # High score in top-right corner
 
-                # Update the display
-                pygame.display.flip()
-                self.clock.tick(FPS)
+            # Update the display
+            pygame.display.flip()
+            self.clock.tick(FPS)
 
 
 
