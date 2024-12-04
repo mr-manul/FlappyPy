@@ -13,7 +13,6 @@ BUTTON_COLOR = (0, 200, 0)
 BUTTON_HOVER_COLOR = (0, 255, 0)
 BUTTON_TEXT_COLOR = WHITE
 
-
 class Game:
     def __init__(self, high_score=0):
         pygame.init()
@@ -132,7 +131,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if retry_hovered:
                         # Restart the game directly
-                        self.__init__()  # Reinitialize the game
+                        self.__init__(self.high_score)  # Reinitialize the game
                         return  # Exit this screen and go back to the main game loop
                     elif quit_hovered:
                         # Immediately stop the game and return to the start screen
