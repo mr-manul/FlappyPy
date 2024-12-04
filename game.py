@@ -130,9 +130,12 @@ class Game:
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if retry_hovered:
-                        # Restart the game directly
-                        self.__init__(self.high_score)  # Reinitialize the game
-                        return  # Exit this screen and go back to the main game loop
+                        # Reset the game state without showing the start screen again
+                        self.bird = Bird()  # Reinitialize the bird
+                        self.pipes = []  # Clear existing pipes
+                        self.score = 0  # Reset the score
+                        self.running = True  # Set the game to running state
+                        return  # Exit this screen and resume the game loop
                     elif quit_hovered:
                         # Immediately stop the game and return to the start screen
                         self.running = False  # Ensure the game loop exits
