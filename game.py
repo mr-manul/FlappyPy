@@ -188,9 +188,9 @@ class Game:
             self.screen.blit(score_text, (10, 10))  # Score in top-left corner
             self.screen.blit(high_score_text, (SCREEN_WIDTH - 200, 10))  # High score in top-right corner
 
-                # Update the display
-                pygame.display.flip()
-                self.clock.tick(FPS)
+            # Update the display
+            pygame.display.flip()
+            self.clock.tick(FPS)
 
 
 
