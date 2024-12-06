@@ -2,6 +2,7 @@ import pygame
 import random
 from bird import Bird
 from pipe import Pipe
+from ground import Ground
 
 # Constants
 SCREEN_WIDTH = 450
@@ -12,6 +13,7 @@ BLACK = (0, 0, 0)
 BUTTON_COLOR = (0, 200, 0)
 BUTTON_HOVER_COLOR = (0, 255, 0)
 BUTTON_TEXT_COLOR = WHITE
+PIPE_SPEED = 3
 
 class Game:
     def __init__(self, high_score=0):
@@ -21,14 +23,16 @@ class Game:
         self.clock = pygame.time.Clock()
         self.bird = Bird()
         self.pipes = []
+        self.ground = Ground()
         self.score = 0
         self.high_score = high_score
+        self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.running = False
 
     def create_pipe(self):
         """Generate a new pipe with a random gap height."""
         gap_height = random.randint(100, SCREEN_HEIGHT - 250)
-        new_pipe = Pipe(SCREEN_WIDTH, gap_height)
+        new_pipe = Pipe(SCREEN_WIDTH, gap_height, self.pipe_speed) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.pipes.append(new_pipe)
 
     def show_start_screen(self):
@@ -134,6 +138,7 @@ class Game:
                         self.bird = Bird()  # Reinitialize the bird
                         self.pipes = []  # Clear existing pipes
                         self.score = 0  # Reset the score
+                        self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         self.running = True  # Set the game to running state
                         return  # Exit this screen and resume the game loop
                     elif quit_hovered:
@@ -154,6 +159,7 @@ class Game:
                 self.bird = Bird()  # Reinitialize the bird
                 self.pipes = []  # Clear existing pipes
                 self.score = 0  # Reset the score
+                passed_pipes = [] # Initiate list of passed pipes for tracking score
                 self.running = True  # Set the game to running state
 
             # Main game loop
@@ -176,26 +182,34 @@ class Game:
                 if len(self.pipes) == 0 or self.pipes[-1].x < SCREEN_WIDTH - 300:
                     self.create_pipe()
 
-                # Update pipes
+                # Update pipes and score
                 for pipe in self.pipes:
                     pipe.update()
                     if pipe.off_screen():
                         self.pipes.remove(pipe)
-                        self.score += 1  # Increment score when a pipe goes off-screen
+                    if pipe not in passed_pipes and self.bird.x > pipe.x + 60 :
+                        self.score += 1  # Increment score when the bird passes a pipe
+                        passed_pipes.append(pipe)
+                
+                # Increase speed every 10 score !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if self.score >= 1 and (self.score + 1) % 10 == 0 :
+                    self.pipe_speed += 0.01
+
 
                 # Check collisions
                 for pipe in self.pipes:
-                    if pipe.collide(self.bird):
+                    if pipe.collide(self.bird) or self.ground.collide(self.bird) :
                         # Update high score if current score is greater
                         if self.score > self.high_score:
                             self.high_score = self.score
                         self.running = False  # End the game loop
-                        break
+                        break             
 
-                # Draw the bird and pipes
+                # Draw the bird and pipes and ground
                 self.bird.draw(self.screen)
                 for pipe in self.pipes:
                     pipe.draw(self.screen)
+                self.ground.draw(self.screen)
 
                 # Draw the score
                 font = pygame.font.SysFont("Arial", 36)
@@ -208,3 +222,4 @@ class Game:
 
             # Show game over screen after the main game loop ends
             self.show_game_over_screen()
+

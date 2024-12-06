@@ -11,16 +11,17 @@ GREEN = (0, 255, 0)
 
 
 class Pipe:
-    def __init__(self, x, gap_height):
+    def __init__(self, x, gap_height, pipe_speed):
         self.x = x
         self.gap_height = gap_height
         self.top = self.gap_height
         self.bottom = self.gap_height + PIPE_GAP
         self.width = PIPE_WIDTH
+        self.pipe_speed = pipe_speed #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def update(self):
         """Move the pipe to the left."""
-        self.x -= PIPE_SPEED
+        self.x -= self.pipe_speed #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def draw(self, screen):
         """Draw the top and bottom pipes."""
