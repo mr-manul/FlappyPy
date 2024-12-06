@@ -36,15 +36,17 @@ class Game:
         self.pipes.append(new_pipe)
 
     def show_start_screen(self):
-        """Display the start screen with a button."""
+        """Display the start screen with a Start Game and Quit button."""
         font = pygame.font.SysFont("Arial", 48)
         button_font = pygame.font.SysFont("Arial", 36)
 
         # Button properties
         button_width = 200
         button_height = 60
-        button_x = (SCREEN_WIDTH - button_width) // 2
-        button_y = (SCREEN_HEIGHT - button_height) // 2
+        start_button_x = (SCREEN_WIDTH - button_width) // 2
+        start_button_y = (SCREEN_HEIGHT - button_height) // 2
+        quit_button_x = start_button_x
+        quit_button_y = start_button_y + 80  # Position below the Start Game button
 
         start_screen = True
         while start_screen:
@@ -55,27 +57,40 @@ class Game:
             title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
             self.screen.blit(title_text, title_rect)
 
-            # Button
+            # Start Game button
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            is_hovered = button_x < mouse_x < button_x + button_width and button_y < mouse_y < button_y + button_height
-            button_color = BUTTON_HOVER_COLOR if is_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, button_color, (button_x, button_y, button_width, button_height))
+            start_hovered = start_button_x < mouse_x < start_button_x + button_width and \
+                            start_button_y < mouse_y < start_button_y + button_height
+            start_button_color = BUTTON_HOVER_COLOR if start_hovered else BUTTON_COLOR
+            pygame.draw.rect(self.screen, start_button_color, (start_button_x, start_button_y, button_width, button_height))
+            start_text = button_font.render("Start Game", True, BUTTON_TEXT_COLOR)
+            start_text_rect = start_text.get_rect(center=(start_button_x + button_width // 2, start_button_y + button_height // 2))
+            self.screen.blit(start_text, start_text_rect)
 
-            # Button text
-            button_text = button_font.render("Start Game", True, BUTTON_TEXT_COLOR)
-            button_text_rect = button_text.get_rect(center=(button_x + button_width // 2, button_y + button_height // 2))
-            self.screen.blit(button_text, button_text_rect)
+            # Quit button
+            quit_hovered = quit_button_x < mouse_x < quit_button_x + button_width and \
+                        quit_button_y < mouse_y < quit_button_y + button_height
+            quit_button_color = BUTTON_HOVER_COLOR if quit_hovered else BUTTON_COLOR
+            pygame.draw.rect(self.screen, quit_button_color, (quit_button_x, quit_button_y, button_width, button_height))
+            quit_text = button_font.render("Quit", True, BUTTON_TEXT_COLOR)
+            quit_text_rect = quit_text.get_rect(center=(quit_button_x + button_width // 2, quit_button_y + button_height // 2))
+            self.screen.blit(quit_text, quit_text_rect)
 
             # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-                if event.type == pygame.MOUSEBUTTONDOWN and is_hovered:
-                    start_screen = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if start_hovered:
+                        start_screen = False
+                    elif quit_hovered:
+                        pygame.quit()
+                        exit()
 
             pygame.display.flip()
             self.clock.tick(FPS)
+
 
     def show_game_over_screen(self):
         """Display the game over screen with retry and quit options."""
