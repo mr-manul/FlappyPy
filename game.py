@@ -30,6 +30,7 @@ class Game:
         self.high_score = high_score
         self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.running = False
+        self.pipes_move_vertically = False
         self.clouds = generate_clouds(10)
     
     def draw_background(self):
@@ -163,6 +164,7 @@ class Game:
                         self.pipes = []  # Clear existing pipes
                         self.score = 0  # Reset the score
                         self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        self.pipes_move_vertically = False  # Disable vertical movement
                         self.running = True  # Set the game to running state
                         return  # Exit this screen and resume the game loop
                     elif quit_hovered:
@@ -185,6 +187,7 @@ class Game:
                 self.score = 0  # Reset the score
                 passed_pipes = [] # Initiate list of passed pipes for tracking score
                 self.running = True  # Set the game to running state
+                self.pipes_move_vertically = False
 
             # Main game loop
             while self.running:
@@ -206,12 +209,16 @@ class Game:
                 if len(self.pipes) == 0 or self.pipes[-1].x < SCREEN_WIDTH - 300:
                     self.create_pipe()
 
+                # Enable vertical pipe movement at score 5
+                if self.score >= 5:
+                    self.pipes_move_vertically = True
+
                 # Update pipes and score
                 for pipe in self.pipes:
-                    pipe.update()
+                    pipe.update(move_vertically=self.pipes_move_vertically)
                     if pipe.off_screen():
                         self.pipes.remove(pipe)
-                    if pipe not in passed_pipes and self.bird.x > pipe.x + 60 :
+                    if pipe not in passed_pipes and self.bird.x > pipe.x + 60:
                         self.score += 1  # Increment score when the bird passes a pipe
                         passed_pipes.append(pipe)
                 
