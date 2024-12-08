@@ -60,7 +60,7 @@ class Game:
 
         start_screen = True
         while start_screen:
-            self.screen.fill(WHITE)  # Clear screen with white background
+            self.draw_background()  # Clear screen with white background
 
             # Title text
             title_text = font.render("Flappy Bird", True, BLACK)
@@ -116,7 +116,7 @@ class Game:
         quit_button_y = retry_button_y + 80
 
         while True:
-            self.screen.fill(WHITE)  # Clear screen with white background
+            self.draw_background()  # Clear screen with white background
 
             # Game over text
             game_over_text = font.render("Game Over!", True, BLACK)
