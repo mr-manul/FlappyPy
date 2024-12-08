@@ -17,11 +17,11 @@ class Pipe:
         self.top = self.gap_height
         self.bottom = self.gap_height + PIPE_GAP
         self.width = PIPE_WIDTH
-        self.pipe_speed = pipe_speed #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+        self.pipe_speed = pipe_speed 
+        
     def update(self):
         """Move the pipe to the left."""
-        self.x -= self.pipe_speed #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.x -= self.pipe_speed 
 
     def draw(self, screen):
         """Draw the top and bottom pipes."""
