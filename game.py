@@ -5,7 +5,6 @@ from pipe import Pipe
 from ground import Ground
 from background import generate_clouds, draw_clouds, COLORS
 
-
 # Constants
 SCREEN_WIDTH = 450
 SCREEN_HEIGHT = 600
@@ -28,72 +27,67 @@ class Game:
         self.ground = Ground()
         self.score = 0
         self.high_score = high_score
-        self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.pipe_speed = PIPE_SPEED
         self.running = False
         self.pipes_move_vertically = False
         self.clouds = generate_clouds(10)
-    
+
+        # Button properties
+        self.button_width = 200
+        self.button_height = 60
+        self.start_button_x = (SCREEN_WIDTH - self.button_width) // 2
+        self.start_button_y = (SCREEN_HEIGHT - self.button_height) // 2
+        self.quit_button_x = self.start_button_x
+        self.quit_button_y = self.start_button_y + 80
+
     def draw_background(self):
         """Draw the background color and clouds."""
         self.screen.fill(COLORS["background"])
-        draw_clouds(self.screen, self.clouds)   
-
+        draw_clouds(self.screen, self.clouds)
 
     def create_pipe(self):
         """Generate a new pipe with a random gap height."""
         gap_height = random.randint(100, SCREEN_HEIGHT - 250)
-        new_pipe = Pipe(SCREEN_WIDTH, gap_height, self.pipe_speed) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        new_pipe = Pipe(SCREEN_WIDTH, gap_height, self.pipe_speed)
         self.pipes.append(new_pipe)
 
+    def draw_button(self, x, y, text, hovered):
+        """Draw a button with hover effect."""
+        button_color = BUTTON_HOVER_COLOR if hovered else BUTTON_COLOR
+        pygame.draw.rect(self.screen, button_color, (x, y, self.button_width, self.button_height))
+        font = pygame.font.SysFont("Nunito", 36)
+        button_text = font.render(text, True, BUTTON_TEXT_COLOR)
+        button_text_rect = button_text.get_rect(center=(x + self.button_width // 2, y + self.button_height // 2))
+        self.screen.blit(button_text, button_text_rect)
+
     def show_start_screen(self):
-        """Display the start screen with a Start Game and Quit button."""
-        font = pygame.font.SysFont("Arial", 48)
-        button_font = pygame.font.SysFont("Arial", 36)
+        """Display the start screen."""
+        font = pygame.font.SysFont("Nunito", 70)
 
-        # Button properties
-        button_width = 200
-        button_height = 60
-        start_button_x = (SCREEN_WIDTH - button_width) // 2
-        start_button_y = (SCREEN_HEIGHT - button_height) // 2
-        quit_button_x = start_button_x
-        quit_button_y = start_button_y + 80  # Position below the Start Game button
-
-        start_screen = True
-        while start_screen:
-            self.draw_background()  # Clear screen with white background
-
-            # Title text
+        while True:
+            self.draw_background()
             title_text = font.render("Flappy Bird", True, BLACK)
             title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
             self.screen.blit(title_text, title_rect)
 
-            # Start Game button
+            # Button interactions
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            start_hovered = start_button_x < mouse_x < start_button_x + button_width and \
-                            start_button_y < mouse_y < start_button_y + button_height
-            start_button_color = BUTTON_HOVER_COLOR if start_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, start_button_color, (start_button_x, start_button_y, button_width, button_height))
-            start_text = button_font.render("Start Game", True, BUTTON_TEXT_COLOR)
-            start_text_rect = start_text.get_rect(center=(start_button_x + button_width // 2, start_button_y + button_height // 2))
-            self.screen.blit(start_text, start_text_rect)
+            start_hovered = self.start_button_x < mouse_x < self.start_button_x + self.button_width and \
+                            self.start_button_y < mouse_y < self.start_button_y + self.button_height
+            quit_hovered = self.quit_button_x < mouse_x < self.quit_button_x + self.button_width and \
+                        self.quit_button_y < mouse_y < self.quit_button_y + self.button_height
 
-            # Quit button
-            quit_hovered = quit_button_x < mouse_x < quit_button_x + button_width and \
-                        quit_button_y < mouse_y < quit_button_y + button_height
-            quit_button_color = BUTTON_HOVER_COLOR if quit_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, quit_button_color, (quit_button_x, quit_button_y, button_width, button_height))
-            quit_text = button_font.render("Quit", True, BUTTON_TEXT_COLOR)
-            quit_text_rect = quit_text.get_rect(center=(quit_button_x + button_width // 2, quit_button_y + button_height // 2))
-            self.screen.blit(quit_text, quit_text_rect)
+            # Draw buttons
+            self.draw_button(self.start_button_x, self.start_button_y, "Start Game", start_hovered)
+            self.draw_button(self.quit_button_x, self.quit_button_y, "Quit", quit_hovered)
 
-            # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if start_hovered:
-                        start_screen = False
+                        return  # Start the game
                     elif quit_hovered:
                         pygame.quit()
                         exit()
@@ -101,156 +95,107 @@ class Game:
             pygame.display.flip()
             self.clock.tick(FPS)
 
-
     def show_game_over_screen(self):
-        """Display the game over screen with retry and quit options."""
-        font = pygame.font.SysFont("Arial", 48)
-        button_font = pygame.font.SysFont("Arial", 36)
-
-        # Button properties
-        button_width = 200
-        button_height = 60
-        retry_button_x = (SCREEN_WIDTH - button_width) // 2
-        retry_button_y = (SCREEN_HEIGHT - button_height) // 2 - 40
-        quit_button_x = retry_button_x
-        quit_button_y = retry_button_y + 80
+        """Display the game over screen."""
+        font = pygame.font.SysFont("Nunito", 48)
 
         while True:
-            self.draw_background()  # Clear screen with white background
-
-            # Game over text
+            self.draw_background()
             game_over_text = font.render("Game Over!", True, BLACK)
             game_over_rect = game_over_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
             self.screen.blit(game_over_text, game_over_rect)
 
-            # Display the final score and high score
+            # Score display
             score_text = font.render(f"Score: {self.score}", True, BLACK)
             high_score_text = font.render(f"High Score: {self.high_score}", True, BLACK)
-
-            # Display the score at the bottom center of the screen
             score_text_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 120))
             high_score_text_rect = high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 80))
             self.screen.blit(score_text, score_text_rect)
             self.screen.blit(high_score_text, high_score_text_rect)
 
-            # Retry button
+            # Button interactions
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            retry_hovered = retry_button_x < mouse_x < retry_button_x + button_width and \
-                            retry_button_y < mouse_y < retry_button_y + button_height
-            retry_button_color = BUTTON_HOVER_COLOR if retry_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, retry_button_color, (retry_button_x, retry_button_y, button_width, button_height))
-            retry_text = button_font.render("Retry", True, BUTTON_TEXT_COLOR)
-            retry_text_rect = retry_text.get_rect(center=(retry_button_x + button_width // 2, retry_button_y + button_height // 2))
-            self.screen.blit(retry_text, retry_text_rect)
+            retry_hovered = self.start_button_x < mouse_x < self.start_button_x + self.button_width and \
+                            self.start_button_y < mouse_y < self.start_button_y + self.button_height
+            quit_hovered = self.quit_button_x < mouse_x < self.quit_button_x + self.button_width and \
+                        self.quit_button_y < mouse_y < self.quit_button_y + self.button_height
 
-            # Quit button
-            quit_hovered = quit_button_x < mouse_x < quit_button_x + button_width and \
-                        quit_button_y < mouse_y < quit_button_y + button_height
-            quit_button_color = BUTTON_HOVER_COLOR if quit_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, quit_button_color, (quit_button_x, quit_button_y, button_width, button_height))
-            quit_text = button_font.render("Quit", True, BUTTON_TEXT_COLOR)
-            quit_text_rect = quit_text.get_rect(center=(quit_button_x + button_width // 2, quit_button_y + button_height // 2))
-            self.screen.blit(quit_text, quit_text_rect)
+            # Draw buttons
+            self.draw_button(self.start_button_x, self.start_button_y, "Retry", retry_hovered)
+            self.draw_button(self.quit_button_x, self.quit_button_y, "Quit", quit_hovered)
 
-            # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if retry_hovered:
-                        # Reset the game state without showing the start screen again
-                        self.bird = Bird()  # Reinitialize the bird
-                        self.pipes = []  # Clear existing pipes
-                        self.score = 0  # Reset the score
-                        self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        self.pipes_move_vertically = False  # Disable vertical movement
-                        self.running = True  # Set the game to running state
-                        return  # Exit this screen and resume the game loop
+                        return  # Retry the game
                     elif quit_hovered:
-                        # Immediately stop the game and return to the start screen
-                        self.running = False  # Ensure the game loop exits
-                        return
+                        pygame.quit()
+                        exit()
 
             pygame.display.flip()
             self.clock.tick(FPS)
 
     def run(self):
         """Main game loop."""
-        while True:  # Keep the game loop running indefinitely until explicitly quit
+        while True:
             if not self.running:
-                self.show_start_screen()  # Show the starting screen
-
-                # Reset game state after the start screen
-                self.bird = Bird()  # Reinitialize the bird
-                self.pipes = []  # Clear existing pipes
-                self.score = 0  # Reset the score
-                passed_pipes = [] # Initiate list of passed pipes for tracking score
-                self.running = True  # Set the game to running state
+                self.show_start_screen()
+                self.bird = Bird()
+                self.pipes = []
+                self.score = 0
+                self.running = True
                 self.pipes_move_vertically = False
 
-            # Main game loop
+            passed_pipes = []
             while self.running:
                 self.draw_background()
 
-                # Handle events
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         exit()
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_SPACE:
-                            self.bird.jump()
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                        self.bird.jump()
 
-                # Update the bird
                 self.bird.update()
 
-                # Add a new pipe if needed
                 if len(self.pipes) == 0 or self.pipes[-1].x < SCREEN_WIDTH - 300:
                     self.create_pipe()
 
-                # Enable vertical pipe movement at score 5
                 if self.score >= 5:
                     self.pipes_move_vertically = True
 
-                # Update pipes and score
                 for pipe in self.pipes:
                     pipe.update(move_vertically=self.pipes_move_vertically)
                     if pipe.off_screen():
                         self.pipes.remove(pipe)
                     if pipe not in passed_pipes and self.bird.x > pipe.x + 60:
-                        self.score += 1  # Increment score when the bird passes a pipe
+                        self.score += 1
                         passed_pipes.append(pipe)
-                
-                # Increase speed every 10 score !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                if self.score >= 1 and (self.score + 1) % 10 == 0 :
+
+                if self.score >= 1 and (self.score + 1) % 10 == 0:
                     self.pipe_speed += 0.01
 
-
-                # Check collisions
                 for pipe in self.pipes:
-                    if pipe.collide(self.bird) or self.ground.collide(self.bird) :
-                        # Update high score if current score is greater
+                    if pipe.collide(self.bird) or self.ground.collide(self.bird):
                         if self.score > self.high_score:
                             self.high_score = self.score
-                        self.running = False  # End the game loop
-                        break             
+                        self.running = False
+                        break
 
-                # Draw the bird and pipes and ground
                 self.bird.draw(self.screen)
                 for pipe in self.pipes:
                     pipe.draw(self.screen)
                 self.ground.draw(self.screen)
 
-                # Draw the score
-                font = pygame.font.SysFont("Arial", 36)
+                font = pygame.font.SysFont("Nunito", 36)
                 score_text = font.render(f"Score: {self.score}", True, BLACK)
-                self.screen.blit(score_text, (10, 10))  # Score in top-left corner
+                self.screen.blit(score_text, (10, 10))
 
-                # Update the display
                 pygame.display.flip()
                 self.clock.tick(FPS)
 
-            # Show game over screen after the main game loop ends
             self.show_game_over_screen()
-
