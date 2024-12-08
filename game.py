@@ -3,6 +3,8 @@ import random
 from bird import Bird
 from pipe import Pipe
 from ground import Ground
+from background import generate_clouds, draw_clouds, COLORS
+
 
 # Constants
 SCREEN_WIDTH = 450
@@ -29,6 +31,13 @@ class Game:
         self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.running = False
         self.pipes_move_vertically = False
+        self.clouds = generate_clouds(10)
+    
+    def draw_background(self):
+        """Draw the background color and clouds."""
+        self.screen.fill(COLORS["background"])
+        draw_clouds(self.screen, self.clouds)   
+
 
     def create_pipe(self):
         """Generate a new pipe with a random gap height."""
@@ -182,7 +191,7 @@ class Game:
 
             # Main game loop
             while self.running:
-                self.screen.fill(WHITE)  # Clear the screen with a white background
+                self.draw_background()
 
                 # Handle events
                 for event in pygame.event.get():
