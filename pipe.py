@@ -19,8 +19,8 @@ class Pipe:
         self.vertical_speed = 2
         self.vertical_direction = 1  # 1 means down, -1 means up
         self.vertical_movement_enabled = False
-        self.pipe_top_image = pygame.image.load("pipe_top.png").convert_alpha()
-        self.pipe_bottom_image = pygame.image.load("pipe_bottom.png").convert_alpha()
+        self.pipe_top_image = pygame.image.load("images/pipe_top.png").convert_alpha()
+        self.pipe_bottom_image = pygame.image.load("images/pipe_bottom.png").convert_alpha()
         self.pipe_top_image = pygame.transform.flip(self.pipe_top_image, False, True)
         self.pipe_top_image = pygame.transform.scale(self.pipe_top_image, (PIPE_WIDTH, SCREEN_HEIGHT))
         self.pipe_bottom_image = pygame.transform.scale(self.pipe_bottom_image, (PIPE_WIDTH, SCREEN_HEIGHT))

@@ -13,7 +13,7 @@ class Ground:
         self.rect = pygame.Rect(0, self.top, self.width, self.height)
 
         # Load the grass image
-        self.grass_image = pygame.image.load("ground.png").convert_alpha()
+        self.grass_image = pygame.image.load("images/ground.png").convert_alpha()
 
         # Scale the image while keeping the height at 40
         self.grass_image = pygame.transform.scale(self.grass_image, (SCREEN_WIDTH, self.height))

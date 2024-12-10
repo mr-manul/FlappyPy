@@ -15,7 +15,7 @@ COLORS = {
 }
 
 # Load cloud image
-cloud_image = pygame.image.load("cloud.png").convert_alpha()
+cloud_image = pygame.image.load("images/cloud.png").convert_alpha()
 cloud_image.set_alpha(200)  # Set transparency (0 to 255)
 # Scale cloud image function
 def scale_cloud(image, size):
