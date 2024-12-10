@@ -5,7 +5,6 @@ from pipe import Pipe
 from ground import Ground
 from background import generate_clouds, draw_clouds, COLORS
 
-
 # Constants
 SCREEN_WIDTH = 450
 SCREEN_HEIGHT = 600
@@ -28,7 +27,7 @@ class Game:
         self.ground = Ground()
         self.score = 0
         self.high_score = high_score
-        self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.pipe_speed = PIPE_SPEED
         self.running = False
         self.pipes_move_vertically = False
         self.clouds = generate_clouds(10)
@@ -38,11 +37,10 @@ class Game:
         self.screen.fill(COLORS["background"])
         draw_clouds(self.screen, self.clouds)   
 
-
     def create_pipe(self):
         """Generate a new pipe with a random gap height."""
         gap_height = random.randint(100, SCREEN_HEIGHT - 250)
-        new_pipe = Pipe(SCREEN_WIDTH, gap_height, self.pipe_speed) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        new_pipe = Pipe(SCREEN_WIDTH, gap_height, self.pipe_speed)
         self.pipes.append(new_pipe)
 
     def show_start_screen(self):
@@ -106,7 +104,6 @@ class Game:
             pygame.display.flip()
             self.clock.tick(FPS)
 
-
     def show_game_over_screen(self):
         """Display the game over screen with retry and quit options."""
         font = pygame.font.SysFont("Nunito", 48)
@@ -169,16 +166,16 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if retry_hovered:
                         # Reset the game state without showing the start screen again
-                        self.bird = Bird()  # Reinitialize the bird
-                        self.pipes = []  # Clear existing pipes
-                        self.score = 0  # Reset the score
-                        self.pipe_speed = PIPE_SPEED #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        self.pipes_move_vertically = False  # Disable vertical movement
-                        self.running = True  # Set the game to running state
-                        return  # Exit this screen and resume the game loop
+                        self.bird = Bird() 
+                        self.pipes = [] 
+                        self.score = 0
+                        self.pipe_speed = PIPE_SPEED
+                        self.pipes_move_vertically = False
+                        self.running = True
+                        return
                     elif quit_hovered:
                         # Immediately stop the game and return to the start screen
-                        self.running = False  # Ensure the game loop exits
+                        self.running = False
                         return
 
             pygame.display.flip()
@@ -188,14 +185,14 @@ class Game:
         """Main game loop."""
         while True:  # Keep the game loop running indefinitely until explicitly quit
             if not self.running:
-                self.show_start_screen()  # Show the starting screen
+                self.show_start_screen()
 
                 # Reset game state after the start screen
-                self.bird = Bird()  # Reinitialize the bird
-                self.pipes = []  # Clear existing pipes
-                self.score = 0  # Reset the score
-                passed_pipes = [] # Initiate list of passed pipes for tracking score
-                self.running = True  # Set the game to running state
+                self.bird = Bird() 
+                self.pipes = []
+                self.score = 0
+                passed_pipes = []
+                self.running = True
                 self.pipes_move_vertically = False
 
             # Main game loop
@@ -231,7 +228,7 @@ class Game:
                         self.score += 1  # Increment score when the bird passes a pipe
                         passed_pipes.append(pipe)
                 
-                # Increase speed every 10 score !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                # Increase speed every 10 score
                 if self.score >= 1 and (self.score + 1) % 10 == 0 :
                     self.pipe_speed += 0.01
 
