@@ -8,7 +8,6 @@ PIPE_WIDTH = 60
 PIPE_GAP = 200
 PIPE_SPEED = 3
 
-
 class Pipe:
     def __init__(self, x, gap_height, pipe_speed):
         self.x = x
@@ -16,7 +15,7 @@ class Pipe:
         self.top = self.gap_height
         self.bottom = self.gap_height + PIPE_GAP
         self.width = PIPE_WIDTH
-        self.pipe_speed = pipe_speed #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.pipe_speed = pipe_speed
         self.vertical_speed = 2
         self.vertical_direction = 1  # 1 means down, -1 means up
         self.vertical_movement_enabled = False
@@ -25,7 +24,6 @@ class Pipe:
         self.pipe_top_image = pygame.transform.flip(self.pipe_top_image, False, True)
         self.pipe_top_image = pygame.transform.scale(self.pipe_top_image, (PIPE_WIDTH, SCREEN_HEIGHT))
         self.pipe_bottom_image = pygame.transform.scale(self.pipe_bottom_image, (PIPE_WIDTH, SCREEN_HEIGHT))
-
 
     def update(self, move_vertically=False):
         """Move the pipe to the left and optionally move vertically."""
@@ -42,15 +40,14 @@ class Pipe:
 
     def draw(self, screen):
         """Draw the top and bottom pipes."""
-        # top pipe
+        # Top pipe
         top_pipe_flipped = pygame.transform.flip(self.pipe_top_image, False, True)  # Flip vertically
         top_pipe_rect = top_pipe_flipped.get_rect(midbottom=(self.x + PIPE_WIDTH // 2, self.top))
         screen.blit(top_pipe_flipped, top_pipe_rect)
 
-        # bottom pipe
+        # Bottom pipe
         bottom_pipe_rect = self.pipe_bottom_image.get_rect(midtop=(self.x + PIPE_WIDTH // 2, self.bottom))
         screen.blit(self.pipe_bottom_image, bottom_pipe_rect)
-
 
     def off_screen(self):
         """Check if the pipe has moved off-screen."""

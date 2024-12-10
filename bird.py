@@ -7,7 +7,6 @@ BIRD_HEIGHT = 20
 GRAVITY = 0.35
 JUMP_STRENGTH = -8
 
-
 class Bird:
     def __init__(self):
         self.x = 200  # Initial x-coordinate

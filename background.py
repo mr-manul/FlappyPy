@@ -2,7 +2,6 @@ import pygame
 import random
 import sys
 
-
 # Initialize Pygame
 pygame.init()
 
@@ -26,7 +25,7 @@ def scale_cloud(image, size):
 def generate_clouds(num_clouds):
     clouds = []
     for _ in range(num_clouds):
-        x = random.randint(0, WIDTH)          # Random x position
+        x = random.randint(0, WIDTH)         # Random x position
         y = random.randint(0, HEIGHT // 2)   # Random y position (top half of screen)
         size = random.randint(40, 100)       # Random size (width and height)
         cloud = {
