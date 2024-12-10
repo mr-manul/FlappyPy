@@ -51,12 +51,12 @@ class Game:
         button_font = pygame.font.SysFont("Nunito", 36)
 
         # Button properties
-        button_width = 200
+        button_width = 170
         button_height = 60
         start_button_x = (SCREEN_WIDTH - button_width) // 2
         start_button_y = (SCREEN_HEIGHT - button_height) // 2
         quit_button_x = start_button_x
-        quit_button_y = start_button_y + 80  # Position below the Start Game button
+        quit_button_y = start_button_y + 90  # Position below the Start Game button
 
         start_screen = True
         while start_screen:
@@ -72,7 +72,10 @@ class Game:
             start_hovered = start_button_x < mouse_x < start_button_x + button_width and \
                             start_button_y < mouse_y < start_button_y + button_height
             start_button_color = BUTTON_HOVER_COLOR if start_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, start_button_color, (start_button_x, start_button_y, button_width, button_height))
+            # Round edges
+            pygame.draw.rect(self.screen, start_button_color, 
+                 (start_button_x, start_button_y, button_width, button_height), 
+                 border_radius=15)
             start_text = button_font.render("Start Game", True, BUTTON_TEXT_COLOR)
             start_text_rect = start_text.get_rect(center=(start_button_x + button_width // 2, start_button_y + button_height // 2))
             self.screen.blit(start_text, start_text_rect)
@@ -81,7 +84,9 @@ class Game:
             quit_hovered = quit_button_x < mouse_x < quit_button_x + button_width and \
                         quit_button_y < mouse_y < quit_button_y + button_height
             quit_button_color = BUTTON_HOVER_COLOR if quit_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, quit_button_color, (quit_button_x, quit_button_y, button_width, button_height))
+            pygame.draw.rect(self.screen, quit_button_color,
+                (quit_button_x, quit_button_y, button_width, button_height),
+                border_radius=15)
             quit_text = button_font.render("Quit", True, BUTTON_TEXT_COLOR)
             quit_text_rect = quit_text.get_rect(center=(quit_button_x + button_width // 2, quit_button_y + button_height // 2))
             self.screen.blit(quit_text, quit_text_rect)
@@ -108,12 +113,12 @@ class Game:
         button_font = pygame.font.SysFont("Nunito", 36)
 
         # Button properties
-        button_width = 200
+        button_width = 170
         button_height = 60
         retry_button_x = (SCREEN_WIDTH - button_width) // 2
         retry_button_y = (SCREEN_HEIGHT - button_height) // 2 - 40
         quit_button_x = retry_button_x
-        quit_button_y = retry_button_y + 80
+        quit_button_y = retry_button_y + 90
 
         while True:
             self.draw_background()  # Clear screen with white background
@@ -138,7 +143,9 @@ class Game:
             retry_hovered = retry_button_x < mouse_x < retry_button_x + button_width and \
                             retry_button_y < mouse_y < retry_button_y + button_height
             retry_button_color = BUTTON_HOVER_COLOR if retry_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, retry_button_color, (retry_button_x, retry_button_y, button_width, button_height))
+            pygame.draw.rect(self.screen, retry_button_color,
+                (retry_button_x, retry_button_y, button_width, button_height),
+                border_radius=15)
             retry_text = button_font.render("Retry", True, BUTTON_TEXT_COLOR)
             retry_text_rect = retry_text.get_rect(center=(retry_button_x + button_width // 2, retry_button_y + button_height // 2))
             self.screen.blit(retry_text, retry_text_rect)
@@ -147,7 +154,9 @@ class Game:
             quit_hovered = quit_button_x < mouse_x < quit_button_x + button_width and \
                         quit_button_y < mouse_y < quit_button_y + button_height
             quit_button_color = BUTTON_HOVER_COLOR if quit_hovered else BUTTON_COLOR
-            pygame.draw.rect(self.screen, quit_button_color, (quit_button_x, quit_button_y, button_width, button_height))
+            pygame.draw.rect(self.screen, quit_button_color,
+                (quit_button_x, quit_button_y, button_width, button_height),
+                border_radius=15)
             quit_text = button_font.render("Quit", True, BUTTON_TEXT_COLOR)
             quit_text_rect = quit_text.get_rect(center=(quit_button_x + button_width // 2, quit_button_y + button_height // 2))
             self.screen.blit(quit_text, quit_text_rect)
