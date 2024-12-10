@@ -228,7 +228,7 @@ class Game:
                         self.score += 1  # Increment score when the bird passes a pipe
                         passed_pipes.append(pipe)
                 
-                # Increase speed every 10 score
+                # Increase speed every 5 score
                 if self.score >= 1 and (self.score + 1) % 5 == 0 :
                     self.pipe_speed += 0.005
 
