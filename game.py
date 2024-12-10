@@ -252,7 +252,7 @@ class Game:
                 self.ground.draw(self.screen)
 
                 # Draw the score
-                font = pygame.font.SysFont("Arial", 36)
+                font = pygame.font.SysFont("Nunito", 40)
                 score_text = font.render(f"Score: {self.score}", True, BLACK)
                 self.screen.blit(score_text, (10, 10))  # Score in top-left corner
 
