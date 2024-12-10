@@ -215,8 +215,8 @@ class Game:
                 if len(self.pipes) == 0 or self.pipes[-1].x < SCREEN_WIDTH - 300:
                     self.create_pipe()
 
-                # Enable vertical pipe movement at score 5
-                if self.score >= 5:
+                # Enable vertical pipe movement at score 10
+                if self.score >= 10:
                     self.pipes_move_vertically = True
 
                 # Update pipes and score
@@ -229,8 +229,8 @@ class Game:
                         passed_pipes.append(pipe)
                 
                 # Increase speed every 10 score
-                if self.score >= 1 and (self.score + 1) % 10 == 0 :
-                    self.pipe_speed += 0.01
+                if self.score >= 1 and (self.score + 1) % 5 == 0 :
+                    self.pipe_speed += 0.005
 
 
                 # Check collisions
